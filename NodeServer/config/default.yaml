@@ -1,0 +1,9 @@
+server:
+  port: 2345
+backend_url: "http://localhost:1234"  # 管理后台的URL
+node:
+  id: 1
+  name: 'edge1'
+log:
+  file: "edge-server.log"
+  level: "info"  # 可以是 "debug", "info", "warn", "error"

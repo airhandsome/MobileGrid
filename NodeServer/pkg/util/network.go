@@ -34,3 +34,25 @@ func isPortInUse(port int) bool {
 	defer conn.Close()
 	return true
 }
+
+// checkPort 检查指定端口是否开启
+func checkPort(port string) bool {
+	conn, err := net.DialTimeout("tcp", "localhost:"+port, 1*time.Second)
+	if err != nil {
+		return false
+	}
+	conn.Close()
+	return true
+}
+
+// MonitorPort 每隔1秒检测指定端口是否开启
+func MonitorPort(port string) {
+	for {
+		if checkPort(port) {
+			fmt.Println("Port", port, "is open.")
+			break
+		}
+		fmt.Println("Port", port, "is closed. Retrying in 1 second...")
+		time.Sleep(1 * time.Second)
+	}
+}

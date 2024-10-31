@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gridsystem-node/config"
 	"github.com/gridsystem-node/pkg/device/android"
+	"github.com/gridsystem-node/pkg/device/android/adb"
 	"github.com/gridsystem-node/pkg/heartbeat"
 	"time"
 )
@@ -21,8 +22,10 @@ func init() {
 }
 
 func main() {
+	go adb.StartAdbServer()
 
 	watchChan := make(chan string, 0)
+	android.InitAdbConnection()
 	go android.WatchDevice(watchChan)
 
 	heartQuitChan := make(chan string)

@@ -2,6 +2,7 @@ package android
 
 import (
 	"github.com/electricbubble/gadb"
+	"github.com/gridsystem-node/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"time"
 )
@@ -9,8 +10,10 @@ import (
 var androidCli gadb.Client
 var AndroidDeviceMap map[string]*AndroidDevice
 
-func init() {
+func InitAdbConnection() {
 	var err error
+	//should check 5037 open
+	util.MonitorPort("5037")
 	androidCli, err = gadb.NewClient()
 	if err != nil {
 		log.Debugf("init gadb client failed: %v", err)
@@ -20,7 +23,6 @@ func init() {
 func WatchDevice(stop <-chan string) {
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
-
 	for {
 		select {
 		case <-stop:
@@ -37,8 +39,9 @@ func WatchDevice(stop <-chan string) {
 				newDeviceMap[d.Serial()] = &AndroidDevice{
 					Device: &d,
 				}
-				if dev, ok := AndroidDeviceMap[d.Serial()]; !ok {
-					go dev.prepare()
+				// not exist in old map
+				if _, ok := AndroidDeviceMap[d.Serial()]; !ok {
+					go newDeviceMap[d.Serial()].prepare()
 				}
 			}
 			AndroidDeviceMap = newDeviceMap

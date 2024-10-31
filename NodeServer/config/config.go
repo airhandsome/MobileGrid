@@ -48,20 +48,20 @@ var BackendURL string
 var WebsocketURL string
 
 func LoadConfig() {
-	nodeID := viper.GetString("node.id")
-	if nodeID == "" {
+	NodeId = viper.GetString("node.id")
+	if NodeId == "" {
 		log.Fatal("NODE_ID environment variable is required")
 	}
 
-	nodeName := viper.GetString("node.name")
-	if nodeName == "" {
+	NodeName = viper.GetString("node.name")
+	if NodeName == "" {
 		log.Fatal("NODE_NAME environment variable is required")
 	}
 
-	backendURL := viper.GetString("backend_url")
-	if backendURL == "" {
+	BackendURL = viper.GetString("backend_url")
+	if BackendURL == "" {
 		log.Fatal("Backend URL is not configured in the config file")
 	}
 
-	WebsocketURL = strings.Replace(backendURL, "http", "ws", -1)
+	WebsocketURL = strings.Replace(BackendURL, "http", "ws", -1)
 }

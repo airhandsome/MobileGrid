@@ -65,16 +65,11 @@ func SendHeartbeat(quitChan <-chan string) {
 	for {
 		select {
 		case status := <-heartBeatChan:
-			jsonBody, err := json.Marshal(status)
-			if err != nil {
-				log.Printf("Failed to marshal heartbeat: %v", err)
-				continue
-			}
 			if ws == nil {
 				log.Println("WebSocket connection is nil, skipping heartbeat")
 				continue
 			}
-			err = ws.WriteMessage(websocket.TextMessage, jsonBody)
+			err := ws.WriteMessage(websocket.TextMessage, []byte(status))
 			if err != nil {
 				log.Printf("Failed to send heartbeat: %v", err)
 			} else {
